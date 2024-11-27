@@ -5,8 +5,8 @@ extern crate log;
 extern crate serde_json;
 extern crate webdriver_client;
 
-use env_logger::{LogBuilder, LogTarget};
-use log::LogLevelFilter;
+use env_logger::{Builder, Target};
+use log::LevelFilter;
 use std::io::Read;
 use std::env;
 use std::path::PathBuf;
@@ -577,15 +577,11 @@ fn ensure_logging_init() {
 }
 
 fn init_logging() {
-    let mut builder = LogBuilder::new();
-    builder.filter(None, LogLevelFilter::Info);
-    builder.target(LogTarget::Stdout);
-
-    if let Ok(ev) = env::var("RUST_LOG") {
-       builder.parse(&ev);
-    }
-
-    builder.init().unwrap();
+    let mut builder = Builder::new();
+    builder.filter(None, LevelFilter::Info);
+    builder.target(Target::Stdout);
+    builder.parse_env("RUST_LOG");
+    builder.init();
 }
 
 struct FileServer {
